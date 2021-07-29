@@ -1,0 +1,12 @@
+{
+  "name": "planz",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "junghyunhao <junghyunhao@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@grpc/grpc-js": "^1.3.6",
+    "@grpc/proto-loader": "^0.6.4",
+    "google-protobuf": "^3.17.3"
+  }
+}
