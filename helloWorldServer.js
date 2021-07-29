@@ -2,14 +2,10 @@ let PROTO_PATH = __dirname + "/helloworld.proto";
 
 let grpc = require("@grpc/grpc-js");
 let protoLoader = require("@grpc/proto-loader");
-let packageDefinition = protoLoader.loadSync(PROTO_PATH, {
-  keepCase: true,
-  longs: String,
-  enums: String,
-  defaults: true,
-  oneofs: true,
-});
-let hello_proto = grpc.loadPackageDefinition(packageDefinition).helloworld;
+
+// 아래 두번째 parameter에 option을 넣어줄 수 있음
+let packageDefinition = protoLoader.loadSync(PROTO_PATH);
+let proto = grpc.loadPackageDefinition(packageDefinition).planzHelloWorld;
 
 /**
  * Implements the SayHello RPC method.
@@ -21,18 +17,26 @@ function sayHello(call, callback) {
 function sayHelloAgain(call, callback) {
   callback(null, { message: "Hello Again " + call.request.name });
 }
+
+function bye(call, callback) {
+  callback(null, { message: "Bye " + call.request.name });
+}
 /**
  * Starts an RPC server that receives requests for the Greeter service at the
  * sample server port
  */
-function main() {
+function startServer() {
+  const bindAdress = "0.0.0.0:50051";
+
   let server = new grpc.Server();
-  server.addService(hello_proto.Greeter.service, {
-    sayHello: sayHello,
-    sayHelloAgain: sayHelloAgain,
+  server.addService(proto.Greeter.service, {
+    sayHello,
+    sayHelloAgain,
+    bye,
   });
   server.bindAsync(
-    "0.0.0.0:50051",
+    //grpc의 given port
+    bindAdress,
     grpc.ServerCredentials.createInsecure(),
     () => {
       server.start();
@@ -40,4 +44,4 @@ function main() {
   );
 }
 
-main();
+startServer();
