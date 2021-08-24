@@ -8,6 +8,30 @@ let protoLoader = require("@grpc/proto-loader");
 let packageDefinition = protoLoader.loadSync(PROTO_PATH);
 let proto = grpc.loadPackageDefinition(packageDefinition).planzHelloWorld;
 
+var grpcChat = protoDescriptor.io.mark.grpc.grpcChat;
+var client = new grpcChat.ChatService(
+  "localhost:50050",
+  grpc.credentials.createInsecure()
+);
+const readline = require("readline");
+const rl = readline.createInterface({
+  input: process.stdin,
+  output: process.stdout,
+});
+
+call.on("data", function (ChatMessage) {
+  console.log(`${ChatMessage.from} ==> ${ChatMessage.message}`);
+});
+
+rl.on("line", function (line) {
+  if (line === "quit") {
+    call.end();
+  } else {
+    call.write({
+      message: line,
+    });
+  }
+});
 function main() {
   // argv의 targetPort가 다른경우 아래코드로 사용할 수 있다.
   // let argv = parseArgs(process.argv.slice(2), {
@@ -45,4 +69,4 @@ function main() {
   });
 }
 
-main();
+// main();

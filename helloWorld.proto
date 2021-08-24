@@ -19,7 +19,14 @@ message ByeReply {
   string message = 1;
 }
 
+// bi-directional example 
+message ChatMessage {
+  string message = 1;
+}
 
+service ChatService {
+  rpc chat(stream ChatMessage) returns (stream ChatMessage) {}
+}
 
 // The greeting service definition.
 service Greeter {
